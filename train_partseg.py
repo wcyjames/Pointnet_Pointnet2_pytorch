@@ -15,6 +15,7 @@ import shutil
 from tqdm import tqdm
 import provider
 import numpy as np
+import time
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = BASE_DIR
@@ -165,6 +166,7 @@ def main(args):
         classifier = classifier.apply(lambda x: bn_momentum_adjust(x,momentum))
 
         '''learning one epoch'''
+        start = time.time()
         for i, data in tqdm(enumerate(trainDataLoader), total=len(trainDataLoader), smoothing=0.9):
             points, label, target = data
             points = points.data.numpy()
@@ -184,6 +186,10 @@ def main(args):
             loss = criterion(seg_pred, target, trans_feat)
             loss.backward()
             optimizer.step()
+
+            if i == 15:
+                end = time.time()
+                log_string('Training time for 15 iterations is: %.3f' % end - start)
         train_instance_acc = np.mean(mean_correct)
         log_string('Train accuracy is: %.5f' % train_instance_acc)
 
