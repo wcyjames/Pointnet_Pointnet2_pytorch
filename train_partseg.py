@@ -189,7 +189,7 @@ def main(args):
 
             if i == 15:
                 end = time.time()
-                log_string('Training time for 15 iterations is: %.3f' % end - start)
+                log_string('Training time for 15 iterations is: %.3f' % (end - start))
         train_instance_acc = np.mean(mean_correct)
         log_string('Train accuracy is: %.5f' % train_instance_acc)
 
