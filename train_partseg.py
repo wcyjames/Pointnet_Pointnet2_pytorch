@@ -18,7 +18,7 @@ import numpy as np
 import time
 
 # To Print Parameters
-from torchsummary import summary
+#from torchsummary import summary
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = BASE_DIR
@@ -111,9 +111,9 @@ def main(args):
 
     # summary(classifier, [(16, 2048, 3), (16, 1, 16)])
 
-    for name, param in classifier.named_parameters():
-        if param.requires_grad:
-            print(name, param.data.shape)
+    # for name, param in classifier.named_parameters():
+    #     if param.requires_grad:
+    #         print(name, param.data.shape)
 
 
     def weights_init(m):
