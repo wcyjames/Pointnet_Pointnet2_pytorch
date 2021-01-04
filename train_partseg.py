@@ -184,9 +184,10 @@ def main(args):
             classifier = classifier.train()
 
             cls_label = to_categorical(label, num_classes)
+            print(cls_label.shape)
             summary(classifier, [(16, 2048, 3), cls_label])
 
-            seg_pred, trans_feat = classifier(points, to_categorical(label, num_classes))
+            seg_pred, trans_feat = classifier(points, cls_label)
             seg_pred = seg_pred.contiguous().view(-1, num_part)
             target = target.view(-1, 1)[:, 0]
             pred_choice = seg_pred.data.max(1)[1]
