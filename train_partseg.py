@@ -109,7 +109,11 @@ def main(args):
     classifier = MODEL.get_model(num_part, normal_channel=args.normal).cuda()
     criterion = MODEL.get_loss().cuda()
 
+    # summary(classifier, [(16, 2048, 3), (16, 1, 16)])
 
+    for name, param in classifier.named_parameters():
+        if param.requires_grad:
+            print(name, param.data.shape)
 
 
     def weights_init(m):
@@ -183,9 +187,7 @@ def main(args):
             optimizer.zero_grad()
             classifier = classifier.train()
 
-            cls_label = to_categorical(label, num_classes)
-            print(cls_label.shape) # [16,1,16]
-            summary(classifier, [(16, 2048, 3), (16, 1, 16)])
+            cls_label = to_categorical(label, num_classes) # [16,1,16]
 
             seg_pred, trans_feat = classifier(points, cls_label)
             seg_pred = seg_pred.contiguous().view(-1, num_part)
