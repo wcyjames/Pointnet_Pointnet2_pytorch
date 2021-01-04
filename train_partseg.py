@@ -183,7 +183,7 @@ def main(args):
             optimizer.zero_grad()
             classifier = classifier.train()
 
-            summary(classifier, points, to_categorical(label, num_classes))
+            summary(classifier, (16, 2048, 3), to_categorical(label, num_classes))
 
             seg_pred, trans_feat = classifier(points, to_categorical(label, num_classes))
             seg_pred = seg_pred.contiguous().view(-1, num_part)
