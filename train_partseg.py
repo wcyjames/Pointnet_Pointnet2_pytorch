@@ -17,6 +17,9 @@ import provider
 import numpy as np
 import time
 
+# To Print Parameters
+from torchsummary import summary
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = BASE_DIR
 sys.path.append(os.path.join(ROOT_DIR, 'models'))
@@ -105,6 +108,8 @@ def main(args):
 
     classifier = MODEL.get_model(num_part, normal_channel=args.normal).cuda()
     criterion = MODEL.get_loss().cuda()
+
+    summary(model, (16, 2048, 3))
 
 
     def weights_init(m):
