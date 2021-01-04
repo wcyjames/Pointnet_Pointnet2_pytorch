@@ -184,7 +184,7 @@ def main(args):
             classifier = classifier.train()
 
             cls_label = to_categorical(label, num_classes)
-            summary(classifier, ((16, 2048, 3), cls_label))
+            summary(classifier, [(16, 2048, 3), cls_label])
 
             seg_pred, trans_feat = classifier(points, to_categorical(label, num_classes))
             seg_pred = seg_pred.contiguous().view(-1, num_part)
