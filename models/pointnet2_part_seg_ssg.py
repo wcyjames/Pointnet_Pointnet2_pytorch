@@ -35,15 +35,17 @@ class get_model(nn.Module):
         l1_xyz, l1_points = self.sa1(l0_xyz, l0_points)
         l2_xyz, l2_points = self.sa2(l1_xyz, l1_points)
         l3_xyz, l3_points = self.sa3(l2_xyz, l2_points)
+        print(l2_points)
         # Feature Propagation layers
         l2_points = self.fp3(l2_xyz, l3_xyz, l2_points, l3_points)
+        print(l2_points)
         l1_points = self.fp2(l1_xyz, l2_xyz, l1_points, l2_points)
-        cls_label_one_hot = cls_label.view(B,16,1).repeat(1,1,N)
-        print(cls_label_one_hot.shape)
-        l0_points = torch.cat([cls_label_one_hot,l0_xyz,l0_points],1)
-        print(l0_points.shape)
-        l0_points = self.fp1(l0_xyz, l1_xyz, l0_points, l1_points)
-        print(l0_points.shape)
+        print(l1_points)
+        cls_label_one_hot = cls_label.view(B,16,1).repeat(1,1,N)     # torch.Size([16, 16, 2048])
+
+        l0_points = torch.cat([cls_label_one_hot,l0_xyz,l0_points],1) # torch.Size([16, 25, 2048])
+
+        l0_points = self.fp1(l0_xyz, l1_xyz, l0_points, l1_points) # torch.Size([16, 128, 2048])
         # FC layers
         feat =  F.relu(self.bn1(self.conv1(l0_points)))
         x = self.drop1(feat)
