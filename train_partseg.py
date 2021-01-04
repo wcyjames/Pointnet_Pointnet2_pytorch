@@ -109,7 +109,7 @@ def main(args):
     classifier = MODEL.get_model(num_part, normal_channel=args.normal).cuda()
     criterion = MODEL.get_loss().cuda()
 
-    summary(model, (16, 2048, 3))
+    summary(MODEL, (16, 2048, 3))
 
 
     def weights_init(m):
