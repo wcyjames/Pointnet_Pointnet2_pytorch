@@ -40,6 +40,7 @@ class get_model(nn.Module):
         l1_points = self.fp2(l1_xyz, l2_xyz, l1_points, l2_points)
         cls_label_one_hot = cls_label.view(B,16,1).repeat(1,1,N)
         l0_points = self.fp1(l0_xyz, l1_xyz, torch.cat([cls_label_one_hot,l0_xyz,l0_points],1), l1_points)
+        print(l0_points.shape)
         # FC layers
         feat =  F.relu(self.bn1(self.conv1(l0_points)))
         x = self.drop1(feat)
