@@ -42,7 +42,7 @@ class get_model(nn.Module):
         l1_points = self.fp2(l1_xyz, l2_xyz, l1_points, l2_points)  # [16, 128, 512])
         cls_label_one_hot = cls_label.view(B,16,1).repeat(1,1,N)     # torch.Size([16, 16, 2048])
 
-        l0_points = torch.cat([cls_label_one_hot,l0_xyz,l0_points],1)  # torch.Size([16, 25, 2048])
+        l0_points = torch.cat([cls_label_one_hot, l0_xyz, l0_points], 1)  # torch.Size([16, 25, 2048])
 
         l0_points = self.fp1(l0_xyz, l1_xyz, l0_points, l1_points)  # torch.Size([16, 128, 2048])
         print(l0_points.shape)
@@ -50,8 +50,7 @@ class get_model(nn.Module):
         feat =  F.relu(self.bn1(self.conv1(l0_points)))
         x = self.drop1(feat)
         x = self.conv2(x)
-        x = F.log_softmax(x, dim=1)
-        print(x.shape)
+        x = F.log_softmax(x, dim=1)   # [16, 50, 2048]
         x = x.permute(0, 2, 1)
         return x, l3_points
 
