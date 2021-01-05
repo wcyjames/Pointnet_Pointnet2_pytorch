@@ -51,6 +51,7 @@ class get_model(nn.Module):
         x = self.drop1(feat)
         x = self.conv2(x)
         x = F.log_softmax(x, dim=1)
+        print(x.shape)
         x = x.permute(0, 2, 1)
         return x, l3_points
 
