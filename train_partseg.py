@@ -181,7 +181,7 @@ def main(args):
         '''learning one epoch'''
         start = time.time()
         profiler.start()
-        
+
         for i, data in tqdm(enumerate(trainDataLoader), total=len(trainDataLoader), smoothing=0.9):
             points, label, target = data
             points = points.data.numpy()
