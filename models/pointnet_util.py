@@ -133,14 +133,22 @@ def sample_and_group(npoint, radius, nsample, xyz, points, returnfps=False):
     torch.cuda.empty_cache()
     grouped_xyz = index_points(xyz, idx) # [B, npoint, nsample, C]
     torch.cuda.empty_cache()
-    grouped_xyz_norm = grouped_xyz - new_xyz.view(B, S, 1, C)
-    torch.cuda.empty_cache()
 
-    if points is not None:
-        grouped_points = index_points(points, idx)
-        new_points = torch.cat([grouped_xyz_norm, grouped_points], dim=-1) # [B, npoint, nsample, C+D]
-    else:
-        new_points = grouped_xyz_norm
+    profiler.start()
+    for i in range(50):
+
+        grouped_xyz_norm = grouped_xyz - new_xyz.view(B, S, 1, C)
+        torch.cuda.empty_cache()
+
+        if points is not None:
+            grouped_points = index_points(points, idx)
+            new_points = torch.cat([grouped_xyz_norm, grouped_points], dim=-1) # [B, npoint, nsample, C+D]
+        else:
+            new_points = grouped_xyz_norm
+    profiler.stop()
+    print(profiler.output_text(unicode=True, color=True, show_all=True))
+
+
     if returnfps:
         return new_xyz, new_points, grouped_xyz, fps_idx
     else:
@@ -195,15 +203,12 @@ class PointNetSetAbstraction(nn.Module):
         if points is not None:
             points = points.permute(0, 2, 1)
 
-        profiler.start()
 
-        for i in range(50):
-            if self.group_all:
-                new_xyz, new_points = sample_and_group_all(xyz, points)
-            else:
-                new_xyz, new_points = sample_and_group(self.npoint, self.radius, self.nsample, xyz, points)
-        profiler.stop()
-        print(profiler.output_text(unicode=True, color=True, show_all=True))
+        if self.group_all:
+            new_xyz, new_points = sample_and_group_all(xyz, points)
+        else:
+            new_xyz, new_points = sample_and_group(self.npoint, self.radius, self.nsample, xyz, points)
+
 
         # new_xyz: sampled points position data, [B, npoint, C]
         # new_points: sampled points data, [B, npoint, nsample, C+D]
