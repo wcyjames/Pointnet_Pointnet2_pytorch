@@ -214,14 +214,14 @@ class PointNetSetAbstraction(nn.Module):
 
         profiler.start()
         for _ in range(50):
-            temp = new_points.clone.detach()
+            temp = new_points.clone
             for i, conv in enumerate(self.mlp_convs):
                 bn = self.mlp_bns[i]
                 temp = F.relu(bn(conv(temp)))
         profiler.stop()
         print(profiler.output_text(unicode=True, color=True, show_all=True))
 
-        new_points = temp.clone.detach()
+        new_points = temp.clone
         # for i, conv in enumerate(self.mlp_convs):
         #     bn = self.mlp_bns[i]
         #     new_points = F.relu(bn(conv(new_points)))
