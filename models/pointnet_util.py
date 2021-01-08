@@ -197,7 +197,7 @@ class PointNetSetAbstraction(nn.Module):
 
         profiler.start()
 
-        for i in range(1000):
+        for i in range(100):
             if self.group_all:
                 new_xyz, new_points = sample_and_group_all(xyz, points)
             else:
