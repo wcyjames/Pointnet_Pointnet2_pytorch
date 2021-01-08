@@ -134,19 +134,16 @@ def sample_and_group(npoint, radius, nsample, xyz, points, returnfps=False):
     grouped_xyz = index_points(xyz, idx) # [B, npoint, nsample, C]
     torch.cuda.empty_cache()
 
-    profiler.start()
-    for i in range(50):
 
-        grouped_xyz_norm = grouped_xyz - new_xyz.view(B, S, 1, C)
-        torch.cuda.empty_cache()
+    grouped_xyz_norm = grouped_xyz - new_xyz.view(B, S, 1, C)
+    torch.cuda.empty_cache()
 
-        if points is not None:
-            grouped_points = index_points(points, idx)
-            new_points = torch.cat([grouped_xyz_norm, grouped_points], dim=-1) # [B, npoint, nsample, C+D]
-        else:
-            new_points = grouped_xyz_norm
-    profiler.stop()
-    print(profiler.output_text(unicode=True, color=True, show_all=True))
+    if points is not None:
+        grouped_points = index_points(points, idx)
+        new_points = torch.cat([grouped_xyz_norm, grouped_points], dim=-1) # [B, npoint, nsample, C+D]
+    else:
+        new_points = grouped_xyz_norm
+
 
 
     if returnfps:
@@ -212,10 +209,17 @@ class PointNetSetAbstraction(nn.Module):
 
         # new_xyz: sampled points position data, [B, npoint, C]
         # new_points: sampled points data, [B, npoint, nsample, C+D]
-        new_points = new_points.permute(0, 3, 2, 1) # [B, C+D, nsample,npoint]
-        for i, conv in enumerate(self.mlp_convs):
-            bn = self.mlp_bns[i]
-            new_points = F.relu(bn(conv(new_points)))
+
+
+        profiler.start()
+        for _ in range(50):
+            new_points = new_points.permute(0, 3, 2, 1)  # [B, C+D, nsample,npoint]
+            print(new_points.shape)
+            for i, conv in enumerate(self.mlp_convs):
+                bn = self.mlp_bns[i]
+                new_points = F.relu(bn(conv(new_points)))
+        profiler.stop()
+        print(profiler.output_text(unicode=True, color=True, show_all=True))
 
         new_points = torch.max(new_points, 2)[0]
         new_xyz = new_xyz.permute(0, 2, 1)
