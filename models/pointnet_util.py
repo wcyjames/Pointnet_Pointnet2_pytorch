@@ -4,6 +4,10 @@ import torch.nn.functional as F
 from time import time
 import numpy as np
 
+# To profile speed
+from pyinstrument import Profiler
+profiler = Profiler()
+
 def timeit(tag, t):
     print("{}: {}s".format(tag, time() - t))
     return time()
@@ -191,16 +195,22 @@ class PointNetSetAbstraction(nn.Module):
         if points is not None:
             points = points.permute(0, 2, 1)
 
-        if self.group_all:
-            new_xyz, new_points = sample_and_group_all(xyz, points)
-        else:
-            new_xyz, new_points = sample_and_group(self.npoint, self.radius, self.nsample, xyz, points)
+        profiler.start()
+
+        for i in range(1000):
+            if self.group_all:
+                new_xyz, new_points = sample_and_group_all(xyz, points)
+            else:
+                new_xyz, new_points = sample_and_group(self.npoint, self.radius, self.nsample, xyz, points)
+        profiler.stop()
+        print(profiler.output_text(unicode=True, color=True))
+
         # new_xyz: sampled points position data, [B, npoint, C]
         # new_points: sampled points data, [B, npoint, nsample, C+D]
         new_points = new_points.permute(0, 3, 2, 1) # [B, C+D, nsample,npoint]
         for i, conv in enumerate(self.mlp_convs):
             bn = self.mlp_bns[i]
-            new_points =  F.relu(bn(conv(new_points)))
+            new_points = F.relu(bn(conv(new_points)))
 
         new_points = torch.max(new_points, 2)[0]
         new_xyz = new_xyz.permute(0, 2, 1)

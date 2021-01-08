@@ -5,8 +5,8 @@ from models.pointnet_util import PointNetSetAbstraction,PointNetFeaturePropagati
 
 
 # To profile speed
-from pyinstrument import Profiler
-profiler = Profiler()
+#from pyinstrument import Profiler
+#profiler = Profiler()
 
 
 class get_model(nn.Module):
@@ -38,14 +38,14 @@ class get_model(nn.Module):
             l0_points = xyz
             l0_xyz = xyz
 
-        profiler.start()
+        #profiler.start()
         l1_xyz, l1_points = self.sa1(l0_xyz, l0_points)     # torch.Size([16, 3, 512]) torch.Size([16, 128, 512]) N = 512
 
         l2_xyz, l2_points = self.sa2(l1_xyz, l1_points)  # torch.Size([16, 3, 128]) torch.Size([16, 256, 128]) N = 128
 
         l3_xyz, l3_points = self.sa3(l2_xyz, l2_points)  # torch.Size([16, 3, 1]) torch.Size([16, 1024, 1]) N = 1
-        profiler.stop()
-        print(profiler.output_text(unicode=True, color=True))
+        #profiler.stop()
+        #print(profiler.output_text(unicode=True, color=True))
 
         # Feature Propagation layers
         l2_points = self.fp3(l2_xyz, l3_xyz, l2_points, l3_points)  # torch.Size([16, 256, 128])
