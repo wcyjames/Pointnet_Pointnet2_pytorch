@@ -197,13 +197,13 @@ class PointNetSetAbstraction(nn.Module):
 
         profiler.start()
 
-        for i in range(100):
+        for i in range(50):
             if self.group_all:
                 new_xyz, new_points = sample_and_group_all(xyz, points)
             else:
                 new_xyz, new_points = sample_and_group(self.npoint, self.radius, self.nsample, xyz, points)
         profiler.stop()
-        print(profiler.output_text(unicode=True, color=True))
+        print(profiler.output_text(unicode=True, color=True, show_all=True))
 
         # new_xyz: sampled points position data, [B, npoint, C]
         # new_points: sampled points data, [B, npoint, nsample, C+D]
