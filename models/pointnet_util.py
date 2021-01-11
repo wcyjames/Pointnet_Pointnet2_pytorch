@@ -223,7 +223,7 @@ class PointNetSetAbstraction(nn.Module):
         profiler.stop()
         print(profiler.output_text(unicode=True, color=True, show_all=True))
 
-        new_points = temp.clone
+        new_points = temp.clone()
         # for i, conv in enumerate(self.mlp_convs):
         #     bn = self.mlp_bns[i]
         #     new_points = F.relu(bn(conv(new_points)))
