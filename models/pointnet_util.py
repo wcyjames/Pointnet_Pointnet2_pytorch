@@ -237,7 +237,7 @@ class PointNetSetAbstraction(nn.Module):
             new_points = F.relu(bn(conv(new_points)))
 
         new_points = torch.max(new_points, 2)[0]
-        print(new_points)
+        print(new_points.shape)
         new_xyz = new_xyz.permute(0, 2, 1)
         return new_xyz, new_points
 
