@@ -221,10 +221,11 @@ class PointNetSetAbstraction(nn.Module):
             for i, conv in enumerate(self.mlp_convs):
                 bn = self.mlp_bns[i]
                 temp = F.relu(bn(conv(temp)))
-                print(temp.shape)
 
-        tmp = temp[0][0][0][0].item()
-        print(tmp)
+            tmp = temp[0][0][0][0].item()
+            new_points = temp.clone()
+            temp = torch.max(new_points, 2)[0]
+            temp = new_xyz.permute(0, 2, 1)
 
         profiler.stop()
         print(profiler.output_text(unicode=True, color=True, show_all=True))
