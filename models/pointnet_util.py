@@ -216,11 +216,12 @@ class PointNetSetAbstraction(nn.Module):
         # pdb.set_trace()
 
         profiler.start()
-        for i in range(50):
+        for _ in range(50):
             temp = new_points.clone()
             for i, conv in enumerate(self.mlp_convs):
                 bn = self.mlp_bns[i]
                 temp = F.relu(bn(conv(temp)))
+                print(temp.shape)
 
         tmp = temp[0][0][0][0].item()
         print(tmp)
