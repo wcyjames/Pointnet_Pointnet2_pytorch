@@ -223,7 +223,9 @@ class PointNetSetAbstraction(nn.Module):
                 temp = F.relu(bn(conv(temp)))
 
             tmp = temp[0][0][0][0].item()
-            temp = torch.max(new_points, 2)[0]
+            print(tmp)
+
+            temp = torch.max(temp, 2)[0]
             new_points = temp.clone()
             new_xyz = new_xyz.permute(0, 2, 1)
 
