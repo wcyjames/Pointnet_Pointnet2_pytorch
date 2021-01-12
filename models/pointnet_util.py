@@ -214,19 +214,19 @@ class PointNetSetAbstraction(nn.Module):
 
         # import pdb
         # pdb.set_trace()
+        temp = new_points.clone()
 
         profiler.start()
         for _ in range(50):
-            temp = new_points.clone()
+            new_points = temp.clone()
             for i, conv in enumerate(self.mlp_convs):
                 bn = self.mlp_bns[i]
-                temp = F.relu(bn(conv(temp)))
+                new_points = F.relu(bn(conv(new_points)))
 
-            tmp = temp[0][0][0][0].item()
+            tmp = new_points[0][0][0][0].item()
             print(tmp)
 
-            temp = torch.max(temp, 2)[0]
-            new_points = temp.clone()
+            new_points = torch.max(new_points, 2)[0]
             new_xyz = new_xyz.permute(0, 2, 1)
 
         profiler.stop()
