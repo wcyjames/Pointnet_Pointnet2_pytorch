@@ -223,9 +223,9 @@ class PointNetSetAbstraction(nn.Module):
                 temp = F.relu(bn(conv(temp)))
 
             tmp = temp[0][0][0][0].item()
-            new_points = temp.clone()
             temp = torch.max(new_points, 2)[0]
-            temp = new_xyz.permute(0, 2, 1)
+            new_points = temp.clone()
+            new_xyz = new_xyz.permute(0, 2, 1)
 
         profiler.stop()
         print(profiler.output_text(unicode=True, color=True, show_all=True))
@@ -237,8 +237,8 @@ class PointNetSetAbstraction(nn.Module):
         #     new_points = F.relu(bn(conv(new_points))
 
 
-        new_points = torch.max(new_points, 2)[0]
-        new_xyz = new_xyz.permute(0, 2, 1)
+        # new_points = torch.max(new_points, 2)[0]
+        # new_xyz = new_xyz.permute(0, 2, 1)
         return new_xyz, new_points
 
 
