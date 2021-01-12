@@ -214,33 +214,31 @@ class PointNetSetAbstraction(nn.Module):
 
         # import pdb
         # pdb.set_trace()
-        temp = new_points.clone()
+        # temp = new_points.clone()
+        #
+        # profiler.start()
+        # for _ in range(50):
+        #     new_points = temp.clone()
+        #     for i, conv in enumerate(self.mlp_convs):
+        #         bn = self.mlp_bns[i]
+        #         new_points = F.relu(bn(conv(new_points)))
+        #
+        #     tmp = new_points[0][0][0][0].item()
+        #     print(tmp)
+        #
+        #     new_points = torch.max(new_points, 2)[0]
+        #     new_xyz = new_xyz.permute(0, 2, 1)
+        #
+        # profiler.stop()
+        # print(profiler.output_text(unicode=True, color=True, show_all=True))
 
-        profiler.start()
-        for _ in range(50):
-            new_points = temp.clone()
-            for i, conv in enumerate(self.mlp_convs):
-                bn = self.mlp_bns[i]
-                new_points = F.relu(bn(conv(new_points)))
-
-            tmp = new_points[0][0][0][0].item()
-            print(tmp)
-
-            new_points = torch.max(new_points, 2)[0]
-            new_xyz = new_xyz.permute(0, 2, 1)
-
-        profiler.stop()
-        print(profiler.output_text(unicode=True, color=True, show_all=True))
-
-        # new_points = temp.clone()
-
-        # for i, conv in enumerate(self.mlp_convs):
-        #     bn = self.mlp_bns[i]
-        #     new_points = F.relu(bn(conv(new_points))
+        for i, conv in enumerate(self.mlp_convs):
+            bn = self.mlp_bns[i]
+            new_points = F.relu(bn(conv(new_points))
 
 
-        # new_points = torch.max(new_points, 2)[0]
-        # new_xyz = new_xyz.permute(0, 2, 1)
+        new_points = torch.max(new_points, 2)[0]
+        new_xyz = new_xyz.permute(0, 2, 1)
         return new_xyz, new_points
 
 
