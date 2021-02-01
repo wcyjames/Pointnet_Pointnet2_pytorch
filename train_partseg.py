@@ -17,13 +17,6 @@ import provider
 import numpy as np
 import time
 
-# To Print Parameters
-#from torchsummary import summary
-
-# To Profile Speed
-# from pyinstrument import Profiler
-# profiler = Profiler()
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = BASE_DIR
 sys.path.append(os.path.join(ROOT_DIR, 'models'))
@@ -113,11 +106,6 @@ def main(args):
     classifier = MODEL.get_model(num_part, normal_channel=args.normal).cuda()
     criterion = MODEL.get_loss().cuda()
 
-    # for name, param in classifier.named_parameters():
-    #     if param.requires_grad:
-    #         print(name, param.data.shape)
-
-
     def weights_init(m):
         classname = m.__class__.__name__
         if classname.find('Conv2d') != -1:
@@ -177,9 +165,6 @@ def main(args):
         classifier = classifier.apply(lambda x: bn_momentum_adjust(x,momentum))
 
         '''learning one epoch'''
-        start = time.time()
-        # profiler.start()
-
         for i, data in tqdm(enumerate(trainDataLoader), total=len(trainDataLoader), smoothing=0.9):
             points, label, target = data
             points = points.data.numpy()
@@ -202,12 +187,6 @@ def main(args):
             loss = criterion(seg_pred, target, trans_feat)
             loss.backward()
             optimizer.step()
-
-            if i == 15:
-                # profiler.stop()
-                # print(profiler.output_text(unicode=True, color=True))
-                end = time.time()
-                log_string('Training time for 15 iterations is: %.3f' % (end - start))
         train_instance_acc = np.mean(mean_correct)
         log_string('Train accuracy is: %.5f' % train_instance_acc)
 

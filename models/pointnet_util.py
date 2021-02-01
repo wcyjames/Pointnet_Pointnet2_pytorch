@@ -4,10 +4,6 @@ import torch.nn.functional as F
 from time import time
 import numpy as np
 
-# To profile speed
-# from pyinstrument import Profiler
-# profiler = Profiler()
-
 def timeit(tag, t):
     print("{}: {}s".format(tag, time() - t))
     return time()
@@ -144,8 +140,6 @@ def sample_and_group(npoint, radius, nsample, xyz, points, returnfps=False):
     else:
         new_points = grouped_xyz_norm
 
-
-
     if returnfps:
         return new_xyz, new_points, grouped_xyz, fps_idx
     else:
@@ -206,32 +200,7 @@ class PointNetSetAbstraction(nn.Module):
         else:
             new_xyz, new_points = sample_and_group(self.npoint, self.radius, self.nsample, xyz, points)
 
-
-        # new_xyz: sampled points position data, [B, npoint, C]
-        # new_points: sampled points data, [B, npoint, nsample, C+D]
-
         new_points = new_points.permute(0, 3, 2, 1)  # [B, C+D, nsample,npoint]
-
-        # import pdb
-        # pdb.set_trace()
-        # temp = new_points.clone()
-        #
-        # profiler.start()
-        # for _ in range(50):
-        #     new_points = temp.clone()
-        #     for i, conv in enumerate(self.mlp_convs):
-        #         bn = self.mlp_bns[i]
-        #         new_points = F.relu(bn(conv(new_points)))
-        #
-        #     tmp = new_points[0][0][0][0].item()
-        #     print(tmp)
-        #
-        #     new_points = torch.max(new_points, 2)[0]
-        #     print(new_points.shape)
-        #
-        #
-        # profiler.stop()
-        # print(profiler.output_text(unicode=True, color=True, show_all=True))
 
         for i, conv in enumerate(self.mlp_convs):
             bn = self.mlp_bns[i]
