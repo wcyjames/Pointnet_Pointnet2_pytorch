@@ -21,7 +21,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a001e2d2-1acc-47a1-b897-e9fd243aacdc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/pointnet_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/pointnet_util.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_cls.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_cls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train_partseg.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_partseg.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -214,7 +214,7 @@
       <workItem from="1609220978250" duration="23322000" />
       <workItem from="1610087954844" duration="8145000" />
       <workItem from="1610100727018" duration="5592000" />
-      <workItem from="1612165705470" duration="643000" />
+      <workItem from="1612165705470" duration="3868000" />
     </task>
     <servers />
   </component>

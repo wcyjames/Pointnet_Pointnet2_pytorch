@@ -15,6 +15,7 @@ import sys
 import provider
 import importlib
 import shutil
+import time
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = BASE_DIR
@@ -145,10 +146,17 @@ def main(args):
 
     '''TRANING'''
     logger.info('Start training...')
+
+    times = []
     for epoch in range(start_epoch,args.epoch):
         log_string('Epoch %d (%d/%s):' % (global_epoch + 1, epoch + 1, args.epoch))
 
+        if epoch == 2:
+            print("3 epochs avg:", sum(times) / len(times))
+
         scheduler.step()
+
+        start = time.time()
         for batch_id, data in tqdm(enumerate(trainDataLoader, 0), total=len(trainDataLoader), smoothing=0.9):
             points, target = data
             points = points.data.numpy()
@@ -171,6 +179,11 @@ def main(args):
             loss.backward()
             optimizer.step()
             global_step += 1
+
+        end = time.time()
+        t = end - start
+        print("training time:", t)
+        times.append(t)
 
         train_instance_acc = np.mean(mean_correct)
         log_string('Train Instance Accuracy: %f' % train_instance_acc)

@@ -150,8 +150,14 @@ def main(args):
     best_class_avg_iou = 0
     best_inctance_avg_iou = 0
 
+    times = []
+
     for epoch in range(start_epoch,args.epoch):
         log_string('Epoch %d (%d/%s):' % (global_epoch + 1, epoch + 1, args.epoch))
+
+        if epoch == 2:
+            print("3 epochs avg:", sum(times) / len(times))
+
         '''Adjust learning rate and BN momentum'''
         lr = max(args.learning_rate * (args.lr_decay ** (epoch // args.step_size)), LEARNING_RATE_CLIP)
         log_string('Learning rate:%f' % lr)
@@ -164,6 +170,7 @@ def main(args):
         print('BN momentum updated to: %f' % momentum)
         classifier = classifier.apply(lambda x: bn_momentum_adjust(x,momentum))
 
+        start = time.time()
         '''learning one epoch'''
         for i, data in tqdm(enumerate(trainDataLoader), total=len(trainDataLoader), smoothing=0.9):
             points, label, target = data
@@ -187,6 +194,12 @@ def main(args):
             loss = criterion(seg_pred, target, trans_feat)
             loss.backward()
             optimizer.step()
+
+        end = time.time()
+        t = end - start
+        print("training time:", t)
+        times.append(t)
+        
         train_instance_acc = np.mean(mean_correct)
         log_string('Train accuracy is: %.5f' % train_instance_acc)
 
